@@ -25,16 +25,16 @@ pipeline {
             }
         }
 
-        stage('Push Docker Images') {
-                    steps {
-                        script{
-                            docker.withRegistry('', 'DockerHubCred') {
-                            sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
-                            sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
-                            }
-                         }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', 'DockerHubCred') {
+                        sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
+                        sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
                     }
                 }
+            }
+        }
 
         stage('Run Ansible Playbook') {
             steps {
@@ -47,6 +47,22 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            mail to: 'Mohit.Sharma@iiitb.ac.in',
+                 subject: "Application Deployment SUCCESS: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "The build was successful!"
+        }
+        failure {
+            mail to: 'Mohit.Sharma@iiitb.ac.in',
+                 subject: "Application Deployment FAILURE: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "The build failed."
+        }
+        always {
+            cleanWs()
         }
     }
 }
