@@ -29,8 +29,9 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', 'DockerHubCred') {
-                        sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
-                        sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
+                        def image = docker.image('spe_mini_calc')
+                        image.tag('iitgmohitsharma/spe_mini_calc:latest')
+                        image.push('latest')
                     }
                 }
             }
