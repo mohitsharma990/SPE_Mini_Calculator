@@ -1,0 +1,30 @@
+---
+- name: Pull Docker Image from Docker Hub
+  hosts: localhost
+  remote_user: mohitsharma
+  become: false
+  vars:
+    ansible_python_interpreter: /Users/mohitsharma/.ansible-env/bin/python3
+  tasks:
+    - name: Install required Ansible collections
+      ansible.builtin.command: ansible-galaxy collection install community.docker
+
+    - name: Pull Docker Image
+      community.docker.docker_image:
+        name: "iitgmohitsharma/spe_mini_calc:latest"
+        source: pull
+
+    - name: Stop and remove existing container if running
+      ansible.builtin.shell: |
+        docker stop spe_mini_calc || true
+        docker rm spe_mini_calc || true
+      ignore_errors: yes
+
+    - name: Run container
+      community.docker.docker_container:
+        name: spe_mini_calc
+        image: iitgmohitsharma/spe_mini_calc:latest
+        state: started
+        detach: true
+        interactive: true
+        tty: true
