@@ -14,4 +14,4 @@ WORKDIR /app
 
 COPY --from=build /app/target/SPE_MINI_CALCULATOR-1.0-SNAPSHOT.jar .
 
-CMD ["java", "-jar", "/app/SPE_MINI_CALCULATOR-1.0-SNAPSHOT.jar", "com.mohit.Calculator"]
+CMD ["java", "-cp", "/app/SPE_MINI_CALCULATOR-1.0-SNAPSHOT.jar", "com.mohit.Calculator"]
