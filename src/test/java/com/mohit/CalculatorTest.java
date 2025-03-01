@@ -75,6 +75,7 @@ class CalculatorTest {
         double expectedResult = 16.0;
         Assertions.assertEquals(expectedResult, calc.power(x, y), 0.001);
     }
+//
 
     @Test
     public void test_power_zero_exponent() {
