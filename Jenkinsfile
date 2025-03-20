@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     // Verify Docker Hub login
-                    docker.withRegistry('https://index.docker.io/v1/', 'DockerHubCred') {
+                    docker.withRegistry('', 'DockerHubCred') {
                         sh 'docker info'
                     }
                 }
