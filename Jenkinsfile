@@ -34,17 +34,16 @@ pipeline {
             }
         }
 
-//         stage('Push Docker Image') {
-//             steps {
-//                 script {
-//                     docker.withRegistry('', 'DockerHubCred') {
-//                         sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
-//                         sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
-//                     }
-//                 }
-//             }
-//         }
-
+        stage('Verify DockerHub Login') {
+            steps {
+                script {
+                    // Verify Docker Hub login
+                    docker.withRegistry('https://index.docker.io/v1/', 'DockerHubCred') {
+                        sh 'docker info'
+                    }
+                }
+            }
+        }
 
         stage('Push Docker Image') {
             steps {
@@ -59,8 +58,6 @@ pipeline {
                 }
             }
         }
-
-
 
         stage('Run Ansible Playbook') {
             steps {
