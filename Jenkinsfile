@@ -38,9 +38,16 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('', 'DockerHubCred') {
-                        sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
-                        sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
+                    withCredentials([usernamePassword(
+                        credentialsId: 'DockerHubCred',   // Use Docker Hub PAT
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )]) {
+                        sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest
+                        docker push iitgmohitsharma/spe_mini_calc:latest
+                        '''
                     }
                 }
             }
