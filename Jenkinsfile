@@ -48,7 +48,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DockerHubCred') {
+                    docker.withRegistry('', 'DockerHubCred') {
                         // Tagging the local image with the Docker Hub repo name
                         sh 'docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
 
