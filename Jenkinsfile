@@ -34,25 +34,11 @@ pipeline {
             }
         }
 
-        stage('Verify DockerHub Login') {
-            steps {
-                script {
-                    // Verify Docker Hub login
-                    docker.withRegistry('', 'DockerHubCred') {
-                        sh 'docker info'
-                    }
-                }
-            }
-        }
-
         stage('Push Docker Image') {
             steps {
                 script {
                     docker.withRegistry('', 'DockerHubCred') {
-                        // Tagging the local image with the Docker Hub repo name
-                        sh 'docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
-
-                        // Pushing the image to Docker Hub
+                        sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
                         sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
                     }
                 }
