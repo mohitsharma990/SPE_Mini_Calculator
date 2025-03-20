@@ -5,9 +5,16 @@
   become: false
   vars:
     ansible_python_interpreter: /Users/mohitsharma/.ansible-env/bin/python3
+    PATH: "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
   tasks:
-    - name: Install required Ansible collections
+    - name: Check if Docker collection is already installed
+      ansible.builtin.stat:
+        path: "~/.ansible/collections/ansible_collections/community/docker"
+      register: docker_collection
+
+    - name: Install required Ansible collections (if not already installed)
       ansible.builtin.command: ansible-galaxy collection install community.docker
+      when: not docker_collection.stat.exists
 
     - name: Pull Docker Image
       community.docker.docker_image:
@@ -15,12 +22,18 @@
         source: pull
 
     - name: Stop and remove existing container if running
-      ansible.builtin.shell: |
-        docker stop spe_mini_calc || true
-        docker rm spe_mini_calc || true
-      ignore_errors: yes
+      block:
+        - name: Stop existing container (if running)
+          ansible.builtin.shell: |
+            docker stop spe_mini_calc || true
+          ignore_errors: yes
 
-    - name: Run container
+        - name: Remove existing container (if running)
+          ansible.builtin.shell: |
+            docker rm spe_mini_calc || true
+          ignore_errors: yes
+
+    - name: Run Docker container
       community.docker.docker_container:
         name: spe_mini_calc
         image: iitgmohitsharma/spe_mini_calc:latest
@@ -28,3 +41,4 @@
         detach: true
         interactive: true
         tty: true
+        recreate: yes

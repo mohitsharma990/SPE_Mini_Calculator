@@ -1,2 +1,2 @@
 [localhost]
-localhost ansible_connection=local ansible_python_interpreter=/Library/Frameworks/Python.framework/Versions/3.11/bin/python3
+localhost ansible_connection=local ansible_python_interpreter=/Users/mohitsharma/.ansible-env/bin/python3
