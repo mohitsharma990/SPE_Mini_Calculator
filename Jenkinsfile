@@ -5,6 +5,7 @@ pipeline {
         PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
         DOCKER_IMAGE_NAME = 'spe_mini_calc'
         GITHUB_REPO_URL = 'https://github.com/mohitsharma990/SPE_Mini_Calculator.git'
+        ANSIBLE_PATH = "/opt/homebrew/bin/ansible-playbook"
     }
 
     stages {
