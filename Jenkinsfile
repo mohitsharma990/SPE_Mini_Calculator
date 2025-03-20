@@ -25,6 +25,14 @@ pipeline {
             }
         }
 
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    sh 'docker login -u iitgmohitsharma -p Mohit@123'
+                }
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 script {
