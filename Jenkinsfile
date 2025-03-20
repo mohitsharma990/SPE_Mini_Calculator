@@ -16,16 +16,6 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    sh 'docker tag spe_mini_calc iitgmohitsharma/spe_mini_calc:latest'
-                    sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
-                }
-            }
-        }
-
-
         stage('Build Docker Image') {
             steps {
                 script {
