@@ -16,6 +16,17 @@ pipeline {
             }
         }
 
+        pipeline {
+            agent any
+            stages {
+                stage('Docker Test') {
+                    steps {
+                        sh 'docker ps'
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
