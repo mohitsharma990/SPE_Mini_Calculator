@@ -16,14 +16,9 @@ pipeline {
             }
         }
 
-        pipeline {
-            agent any
-            stages {
-                stage('Docker Test') {
-                    steps {
-                        sh 'docker ps'
-                    }
-                }
+        stage('Docker Test') {
+            steps {
+                sh 'docker ps'
             }
         }
 
