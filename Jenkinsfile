@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'spe_mini_calc'
         GITHUB_REPO_URL = 'https://github.com/mohitsharma990/SPE_Mini_Calculator.git'
-        PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"  // Append Docker path correctly
     }
 
     stages {
@@ -20,8 +19,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Use /bin/bash explicitly to avoid /bin/sh issues
-                    sh '/bin/bash -c "/opt/homebrew/bin/docker build -t ${DOCKER_IMAGE_NAME} ."'
+                    // Build Docker image
+                    docker.build("${DOCKER_IMAGE_NAME}", '.')
                 }
             }
         }
@@ -29,24 +28,18 @@ pipeline {
         stage('Testing') {
             steps {
                 script {
-                    sh '/bin/bash -c "mvn clean test"'
+                    // Run JUnit tests using Maven Surefire plugin
+                    sh 'mvn clean test'
                 }
             }
         }
 
-        stage('Docker Hub Login') {
+        stage('Verify DockerHub Login') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'DockerHubCred',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    script {
-                        try {
-                            sh '/bin/bash -c "/opt/homebrew/bin/docker login -u \"$DOCKER_USER\" -p \"$DOCKER_PASS\" "'
-                        } catch (Exception e) {
-                            error "Docker login failed: ${e.getMessage()}"
-                        }
+                script {
+                    // Verify Docker Hub login
+                    docker.withRegistry('', 'DockerHubCred') {
+                        sh 'docker info'
                     }
                 }
             }
@@ -55,9 +48,13 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Tag and push Docker image
-                    sh '/bin/bash -c "/opt/homebrew/bin/docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest"'
-                    sh '/bin/bash -c "/opt/homebrew/bin/docker push iitgmohitsharma/spe_mini_calc:latest"'
+                    docker.withRegistry('', 'DockerHubCred') {
+                        // Tagging the local image with the Docker Hub repo name
+                        sh 'docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
+
+                        // Pushing the image to Docker Hub
+                        sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
+                    }
                 }
             }
         }
