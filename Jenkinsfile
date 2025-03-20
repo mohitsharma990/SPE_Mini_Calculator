@@ -58,10 +58,8 @@ pipeline {
             steps {
                 script {
                     withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
-                        ansiblePlaybook(
-                            playbook: 'deploy.yml',
-                            inventory: 'inventory'
-                        )
+                        // Use full path to Ansible playbook
+                        sh "/opt/homebrew/bin/ansible-playbook -i inventory deploy.yml"
                     }
                 }
             }
