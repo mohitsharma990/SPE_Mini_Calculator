@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'spe_mini_calc'
         GITHUB_REPO_URL = 'https://github.com/mohitsharma990/SPE_Mini_Calculator.git'
+        PATH = "/opt/homebrew/bin:$PATH"  // Ensure Docker path is included
     }
 
     stages {
@@ -20,7 +21,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    docker.build("${DOCKER_IMAGE_NAME}", '.')
+                    sh '/opt/homebrew/bin/docker build -t ${DOCKER_IMAGE_NAME} .'  // Explicit Docker path
                 }
             }
         }
@@ -41,9 +42,13 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh """
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    """
+                    script {
+                        try {
+                            sh "/opt/homebrew/bin/docker login -u \"$DOCKER_USER\" -p \"$DOCKER_PASS\""
+                        } catch (Exception e) {
+                            error "Docker login failed: ${e.getMessage()}"
+                        }
+                    }
                 }
             }
         }
@@ -52,10 +57,10 @@ pipeline {
             steps {
                 script {
                     // Tagging the local image with the Docker Hub repo name
-                    sh 'docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
+                    sh '/opt/homebrew/bin/docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
 
                     // Pushing the image to Docker Hub
-                    sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
+                    sh '/opt/homebrew/bin/docker push iitgmohitsharma/spe_mini_calc:latest'
                 }
             }
         }
