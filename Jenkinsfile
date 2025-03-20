@@ -16,20 +16,6 @@ pipeline {
             }
         }
 
-        stage('Docker Test') {
-            steps {
-                sh 'docker ps'
-            }
-        }
-
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                    sh 'docker login -u iitgmohitsharma -p Mohit@123'
-                }
-            }
-        }
-
         stage('Push Docker Image') {
             steps {
                 script {
