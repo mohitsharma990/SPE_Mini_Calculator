@@ -7,9 +7,9 @@
 ## 🚀 **Features**
 - **Basic Operations:**  
     - Addition  
-    - Subtraction  
+    - Subtraction   
     - Multiplication  
-    - Division  
+    - Division:
 - **Scientific Operations:**  
     - Square root (√x)  
     - Factorial (x!)  
