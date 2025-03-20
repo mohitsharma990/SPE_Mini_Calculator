@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'spe_mini_calc'
         GITHUB_REPO_URL = 'https://github.com/mohitsharma990/SPE_Mini_Calculator.git'
-        PATH = "/opt/homebrew/bin:$PATH"  // Ensure Docker path is included
+        PATH+EXTRA = "/opt/homebrew/bin"  // Use PATH+EXTRA to properly extend the PATH
     }
 
     stages {
@@ -20,8 +20,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
-                    sh '/opt/homebrew/bin/docker build -t ${DOCKER_IMAGE_NAME} .'  // Explicit Docker path
+                    // Use explicit Docker path to avoid PATH issues
+                    sh '/opt/homebrew/bin/docker build -t ${DOCKER_IMAGE_NAME} .'
                 }
             }
         }
@@ -29,7 +29,6 @@ pipeline {
         stage('Testing') {
             steps {
                 script {
-                    // Run JUnit tests using Maven Surefire plugin
                     sh 'mvn clean test'
                 }
             }
@@ -38,7 +37,7 @@ pipeline {
         stage('Docker Hub Login') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'DockerHubCred',   // Use the ID you saved in Jenkins
+                    credentialsId: 'docker-hub',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
@@ -56,10 +55,8 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Tagging the local image with the Docker Hub repo name
+                    // Tag and push Docker image
                     sh '/opt/homebrew/bin/docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
-
-                    // Pushing the image to Docker Hub
                     sh '/opt/homebrew/bin/docker push iitgmohitsharma/spe_mini_calc:latest'
                 }
             }
