@@ -34,13 +34,16 @@ pipeline {
             }
         }
 
-        stage('Verify DockerHub Login') {
+        stage('Docker Hub Login') {
             steps {
-                script {
-                    // Verify Docker Hub login
-                    docker.withRegistry('', 'DockerHubCred') {
-                        sh 'docker info'
-                    }
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-hub',   // Use the ID you saved in Jenkins
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    """
                 }
             }
         }
@@ -48,13 +51,11 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('', 'DockerHubCred') {
-                        // Tagging the local image with the Docker Hub repo name
-                        sh 'docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
+                    // Tagging the local image with the Docker Hub repo name
+                    sh 'docker tag spe_mini_calc:latest iitgmohitsharma/spe_mini_calc:latest'
 
-                        // Pushing the image to Docker Hub
-                        sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
-                    }
+                    // Pushing the image to Docker Hub
+                    sh 'docker push iitgmohitsharma/spe_mini_calc:latest'
                 }
             }
         }
