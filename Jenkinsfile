@@ -25,10 +25,11 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub') {
+        stage('Testing') {
             steps {
                 script {
-                    sh 'docker login -u iitgmohitsharma -p Mohit@123'
+                    // Run JUnit tests using Maven Surefire plugin
+                    sh 'mvn clean test'
                 }
             }
         }
