@@ -14,7 +14,7 @@
     - Square root (√x)  
     - Factorial (x!)  
     - Natural logarithm (ln(x))  
-    - Power function (xᵇ)  
+    - Power function (xᵇ).
 - **DevOps Pipeline:**  
     - **GitHub:** Source code management.  
     - **Jenkins:** Continuous Integration and Deployment.  
