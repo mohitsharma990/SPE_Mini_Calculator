@@ -7,7 +7,7 @@
 ## 🚀 **Features**
 - **Basic Operations:** 
     - Addition  
-    - Subtraction   
+    - Subtraction       k
     - Multiplication  
     - Division:
 - **Scientific Operations:**  
