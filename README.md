@@ -11,7 +11,7 @@
     - Multiplication  
     - Division:
 - **Scientific Operations:**  
-    - Square root (√x)  
+    - Square root (√x)    
     - Factorial (x!)  
     - Natural logarithm (ln(x))  
     - Power function (xᵇ).
