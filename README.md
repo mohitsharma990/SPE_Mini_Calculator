@@ -5,7 +5,7 @@
 ---
 
 ## 🚀 **Features**
-- **Basic Operations:**
+- **Basic Operations:** 
     - Addition  
     - Subtraction   
     - Multiplication  
